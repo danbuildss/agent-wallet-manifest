@@ -4,25 +4,25 @@
   "ecosystem": "Base",
   "website": "https://www.x402books.xyz",
   "x": "@AskLucaAI",
-  "github": "@x402books",
+  "github": "@danbuildss",
   "wallets": [
     {
-      "address": "0x0000000000000000000000000000000000000001",
+      "address": "0xb98f0de777eea8c481b64e33d3e0066cea38fa91",
       "chain": "base",
-      "role": "treasury",
+      "role": "payment_receiver",
       "verification_method": "repo_manifest",
-      "evidence_url": "https://github.com/x402books/agent-wallet-manifest",
-      "notes": "Primary treasury wallet. Receives revenue from x402Books AI platform.",
+      "evidence_url": "https://github.com/danbuildss/agent-wallet-manifest",
+      "notes": "Primary wallet. Receives all x402Books AI API revenue via BANKR x402 Cloud.",
       "last_updated": "2026-05-20",
       "active": true
     },
     {
-      "address": "0x0000000000000000000000000000000000000002",
+      "address": "0xb2b335f832fd3f43461ebd1cd9831d93d9ca4ba3",
       "chain": "base",
-      "role": "operator",
+      "role": "token_contract",
       "verification_method": "repo_manifest",
-      "evidence_url": "https://github.com/x402books/agent-wallet-manifest",
-      "notes": "Operational wallet used by Luca agent to pay for on-chain services.",
+      "evidence_url": "https://basescan.org/address/0xb2b335f832fd3f43461ebd1cd9831d93d9ca4ba3",
+      "notes": "$LUCA — the x402Books AI ecosystem token on Base.",
       "last_updated": "2026-05-20",
       "active": true
     }
