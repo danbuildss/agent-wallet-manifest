@@ -43,6 +43,11 @@
       "type": "string",
       "description": "Contact email or URL for wallet verification inquiries."
     },
+    "did": {
+      "type": "string",
+      "description": "Decentralized Identifier (DID) for the agent, e.g. from GitLawb.",
+      "pattern": "^did:[a-z]+:.+$"
+    },
     "wallets": {
       "type": "array",
       "description": "List of wallets used by this agent.",
