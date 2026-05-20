@@ -1,0 +1,132 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/x402books/agent-wallet-manifest/schema/wallets.schema.json",
+  "title": "Agent Wallet Manifest",
+  "description": "Standard schema for publishing verified wallet addresses used by autonomous agents.",
+  "type": "object",
+  "required": ["agent", "project", "ecosystem", "wallets"],
+  "additionalProperties": false,
+  "properties": {
+    "agent": {
+      "type": "string",
+      "description": "The name of the agent or AI system.",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "project": {
+      "type": "string",
+      "description": "The project or organization operating the agent.",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "ecosystem": {
+      "type": "string",
+      "description": "The primary blockchain ecosystem the agent operates on.",
+      "examples": ["Base", "Ethereum", "Solana", "Arbitrum", "Optimism", "Polygon"]
+    },
+    "website": {
+      "type": "string",
+      "format": "uri",
+      "description": "Public website for the agent or project."
+    },
+    "x": {
+      "type": "string",
+      "description": "X (Twitter) handle, with or without @.",
+      "pattern": "^@?[A-Za-z0-9_]{1,50}$"
+    },
+    "github": {
+      "type": "string",
+      "description": "GitHub organization or user handle.",
+      "pattern": "^@?[A-Za-z0-9-]{1,39}$"
+    },
+    "contact": {
+      "type": "string",
+      "description": "Contact email or URL for wallet verification inquiries."
+    },
+    "wallets": {
+      "type": "array",
+      "description": "List of wallets used by this agent.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["address", "chain", "role", "verification_method"],
+        "additionalProperties": false,
+        "properties": {
+          "address": {
+            "type": "string",
+            "description": "The wallet address (EVM or chain-native format).",
+            "pattern": "^0x[a-fA-F0-9]{40}$",
+            "examples": ["0x1234567890abcdef1234567890abcdef12345678"]
+          },
+          "chain": {
+            "type": "string",
+            "description": "The chain this wallet operates on.",
+            "enum": [
+              "base",
+              "ethereum",
+              "arbitrum",
+              "optimism",
+              "polygon",
+              "solana",
+              "avalanche",
+              "bnb",
+              "zora",
+              "blast",
+              "linea",
+              "scroll",
+              "mode",
+              "other"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "description": "The functional role of this wallet in the agent's operations.",
+            "enum": [
+              "treasury",
+              "revenue",
+              "expense",
+              "operator",
+              "deployer",
+              "fee_recipient",
+              "payment_receiver",
+              "token_contract",
+              "token_bound_account",
+              "unknown"
+            ]
+          },
+          "verification_method": {
+            "type": "string",
+            "description": "How this wallet ownership is verified.",
+            "enum": [
+              "repo_manifest",
+              "on_chain_signature",
+              "dns_record",
+              "social_post",
+              "multisig_ownership"
+            ]
+          },
+          "evidence_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL pointing to verification evidence (repo, tx, post, etc.)."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Human-readable description of this wallet's purpose.",
+            "maxLength": 500
+          },
+          "last_updated": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO 8601 date when this wallet entry was last verified (YYYY-MM-DD)."
+          },
+          "active": {
+            "type": "boolean",
+            "description": "Whether this wallet is currently active. Defaults to true.",
+            "default": true
+          }
+        }
+      }
+    }
+  }
+}

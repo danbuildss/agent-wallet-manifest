@@ -1,0 +1,32 @@
+{
+  "name": "agent-wallet-manifest",
+  "version": "0.1.0",
+  "description": "Standard schema and validator for publishing verified wallet addresses used by autonomous agents.",
+  "keywords": ["agent", "wallet", "base", "x402", "manifest", "standard", "ai-agent", "onchain"],
+  "homepage": "https://github.com/x402books/agent-wallet-manifest",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/x402books/agent-wallet-manifest.git"
+  },
+  "license": "MIT",
+  "bin": {
+    "agent-wallet-manifest": "./validator/cli.js"
+  },
+  "scripts": {
+    "validate": "ts-node validator/validate.ts",
+    "build": "tsc",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

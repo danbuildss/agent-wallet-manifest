@@ -1,0 +1,41 @@
+{
+  "agent": "YourAgentName",
+  "project": "Your Project Name",
+  "ecosystem": "Base",
+  "website": "https://yourproject.xyz",
+  "x": "@YourHandle",
+  "github": "@yourorg",
+  "contact": "contact@yourproject.xyz",
+  "wallets": [
+    {
+      "address": "0xYourTreasuryWalletAddress000000000000000",
+      "chain": "base",
+      "role": "treasury",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/yourorg/yourrepo",
+      "notes": "Primary treasury — receives all protocol revenue.",
+      "last_updated": "2026-05-20",
+      "active": true
+    },
+    {
+      "address": "0xYourOperatorWalletAddress000000000000000",
+      "chain": "base",
+      "role": "operator",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/yourorg/yourrepo",
+      "notes": "Hot wallet used by the agent for gas and on-chain interactions.",
+      "last_updated": "2026-05-20",
+      "active": true
+    },
+    {
+      "address": "0xYourTokenContractAddress000000000000000",
+      "chain": "base",
+      "role": "token_contract",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://basescan.org/address/0xYourTokenContractAddress000000000000000",
+      "notes": "Ecosystem token contract.",
+      "last_updated": "2026-05-20",
+      "active": true
+    }
+  ]
+}

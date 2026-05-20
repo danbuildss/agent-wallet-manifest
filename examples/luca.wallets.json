@@ -1,0 +1,30 @@
+{
+  "agent": "Luca",
+  "project": "x402Books AI",
+  "ecosystem": "Base",
+  "website": "https://www.x402books.xyz",
+  "x": "@AskLucaAI",
+  "github": "@x402books",
+  "wallets": [
+    {
+      "address": "0x0000000000000000000000000000000000000001",
+      "chain": "base",
+      "role": "treasury",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/x402books/agent-wallet-manifest",
+      "notes": "Primary treasury wallet. Receives revenue from x402Books AI platform.",
+      "last_updated": "2026-05-20",
+      "active": true
+    },
+    {
+      "address": "0x0000000000000000000000000000000000000002",
+      "chain": "base",
+      "role": "operator",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/x402books/agent-wallet-manifest",
+      "notes": "Operational wallet used by Luca agent to pay for on-chain services.",
+      "last_updated": "2026-05-20",
+      "active": true
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+name: Validate Wallet Manifest
+
+on:
+  push:
+    paths:
+      - ".x402books/wallets.json"
+  pull_request:
+    paths:
+      - ".x402books/wallets.json"
+
+jobs:
+  validate:
+    name: Validate wallets.json
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Validate manifest
+        run: npx agent-wallet-manifest validate .x402books/wallets.json
