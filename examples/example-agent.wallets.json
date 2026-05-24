@@ -8,7 +8,7 @@
   "contact": "contact@yourproject.xyz",
   "wallets": [
     {
-      "address": "0xYourTreasuryWalletAddress000000000000000",
+      "address": "0x1111111111111111111111111111111111111111",
       "chain": "base",
       "role": "treasury",
       "verification_method": "repo_manifest",
@@ -18,7 +18,7 @@
       "active": true
     },
     {
-      "address": "0xYourOperatorWalletAddress000000000000000",
+      "address": "0x2222222222222222222222222222222222222222",
       "chain": "base",
       "role": "operator",
       "verification_method": "repo_manifest",
@@ -28,11 +28,11 @@
       "active": true
     },
     {
-      "address": "0xYourTokenContractAddress000000000000000",
+      "address": "0x3333333333333333333333333333333333333333",
       "chain": "base",
       "role": "token_contract",
       "verification_method": "repo_manifest",
-      "evidence_url": "https://basescan.org/address/0xYourTokenContractAddress000000000000000",
+      "evidence_url": "https://basescan.org/address/0x3333333333333333333333333333333333333333",
       "notes": "Ecosystem token contract.",
       "last_updated": "2026-05-20",
       "active": true

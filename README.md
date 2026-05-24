@@ -60,18 +60,20 @@ touch .x402books/wallets.json
 **3. Validate your manifest:**
 
 ```bash
-npx agent-wallet-manifest validate .x402books/wallets.json
+# Clone the validator
+git clone https://github.com/danbuildss/agent-wallet-manifest
+cd agent-wallet-manifest
+npm install
+
+# Run against your manifest
+npm run validate -- path/to/.x402books/wallets.json
 # ✓ Valid manifest — YourAgent (Your Project)
 #   1 wallet(s) declared
 ```
 
 **4. Submit to the x402Books registry:**
 
-Once your manifest is live, submit it at [x402books.xyz](https://www.x402books.xyz) or call:
-
-```
-GET https://api.x402books.xyz/v1/registry/import?repo=yourorg/yourrepo
-```
+Once your manifest is live on GitHub, submit it at [x402books.xyz](https://www.x402books.xyz/registry) using the registry submission form.
 
 ---
 
@@ -158,8 +160,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install validator
+        run: git clone https://github.com/danbuildss/agent-wallet-manifest /tmp/avm && cd /tmp/avm && npm ci
       - name: Validate manifest
-        run: npx agent-wallet-manifest validate .x402books/wallets.json
+        run: node /tmp/avm/dist/validate.js .x402books/wallets.json
 ```
 
 ---

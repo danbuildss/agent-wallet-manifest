@@ -20,5 +20,10 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install agent-wallet-manifest validator
+        run: |
+          git clone https://github.com/danbuildss/agent-wallet-manifest /tmp/avm
+          cd /tmp/avm && npm ci
+
       - name: Validate manifest
-        run: npx agent-wallet-manifest validate .x402books/wallets.json
+        run: node /tmp/avm/dist/validate.js .x402books/wallets.json
