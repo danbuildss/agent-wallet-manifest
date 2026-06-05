@@ -1,204 +1,163 @@
 # Agent Wallet Manifest
 
-**A standard for autonomous agents to publish their verified wallet addresses.**
+[![Verified Agent Wallets](https://img.shields.io/badge/agent--wallets-verified-6DB874?style=flat)](https://www.x402books.xyz/registry/luca)
 
-```
-.x402books/wallets.json
-```
+The open standard for autonomous agent financial identity.
 
 ---
 
-## The Problem
+## The problem
 
-There is no standard way to answer: *which wallet does this agent actually use?*
-
-If you want to pay an agent, verify its treasury, audit its spending, or build tooling on top of it — you have nowhere to look. Agent wallet ownership is unverified, scattered, and inconsistent across the ecosystem.
-
-## The Solution
-
-One file in your repo. Publicly readable. Machine-verifiable.
-
-Agent projects add a `wallets.json` manifest to their repository at `.x402books/wallets.json`. This file declares every wallet the agent uses — treasury, operators, payment receivers, token contracts — with roles, chains, and verification evidence.
-
-x402Books AI uses this manifest to auto-import agents into the [Agent Financial Registry](https://www.x402books.xyz), generate verified financial reports, and score treasury health.
+Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent. Anyone can claim a wallet address. Projects can't prove which addresses are theirs. Financial activity is unreadable, unauditable, and untrustworthy. The Agent Wallet Manifest fixes that: a single `.x402books/wallets.json` file in your repo becomes a signed, verifiable declaration of your agent's financial identity — publicly indexed on [x402Books](https://www.x402books.xyz) and interpreted by [Luca](https://www.x402books.xyz/luca).
 
 ---
 
-## Quickstart
+## Quick start
 
-**1. Create the manifest file in your repo:**
+**1. Add your manifest**
 
-```
-mkdir .x402books
-touch .x402books/wallets.json
-```
-
-**2. Add your wallet data:**
+Create `.x402books/wallets.json` in your repo:
 
 ```json
 {
-  "agent": "YourAgent",
-  "project": "Your Project",
+  "agent": "MyAgent",
+  "project": "My Project",
   "ecosystem": "Base",
-  "website": "https://yourproject.xyz",
-  "x": "@YourHandle",
+  "website": "https://myproject.xyz",
   "wallets": [
     {
       "address": "0xYourWalletAddress",
       "chain": "base",
-      "role": "treasury",
+      "role": "payment_receiver",
       "verification_method": "repo_manifest",
-      "evidence_url": "https://github.com/yourorg/yourrepo",
-      "notes": "Primary treasury wallet.",
-      "last_updated": "2026-05-20",
+      "notes": "Primary wallet for API revenue.",
+      "last_updated": "2026-06-05",
       "active": true
     }
   ]
 }
 ```
 
-**3. Validate your manifest:**
+**2. Add the GitHub Action**
 
-```bash
-# Clone the validator
-git clone https://github.com/danbuildss/agent-wallet-manifest
-cd agent-wallet-manifest
-npm install
-
-# Run against your manifest
-npm run validate -- path/to/.x402books/wallets.json
-# ✓ Valid manifest — YourAgent (Your Project)
-#   1 wallet(s) declared
-```
-
-**4. Submit to the x402Books registry:**
-
-Once your manifest is live on GitHub, submit it at [x402books.xyz](https://www.x402books.xyz/registry) using the registry submission form.
-
----
-
-## Wallet Roles
-
-| Role | Description |
-|------|-------------|
-| `treasury` | Primary funds storage. Where revenue accumulates. |
-| `revenue` | Dedicated wallet receiving protocol income. |
-| `expense` | Wallet used for outgoing payments and costs. |
-| `operator` | Hot wallet the agent uses for gas and on-chain actions. |
-| `deployer` | Wallet that deployed contracts. |
-| `fee_recipient` | Receives protocol fees. |
-| `payment_receiver` | Accepts incoming payments from users or other agents. |
-| `token_contract` | The address of the project's ecosystem token. |
-| `token_bound_account` | ERC-6551 token-bound account. |
-| `unknown` | Role not yet classified. |
-
----
-
-## Verification Methods
-
-| Method | Description |
-|--------|-------------|
-| `repo_manifest` | This file. Wallet is declared in a public GitHub repo. |
-| `on_chain_signature` | Wallet signed a message proving repo ownership. |
-| `dns_record` | Address published in DNS TXT record for the project domain. |
-| `social_post` | Publicly posted from verified project social account. |
-| `multisig_ownership` | Wallet is a multisig with public signers. |
-
----
-
-## Full Schema
-
-See [`schema/wallets.schema.json`](./schema/wallets.schema.json) for the complete JSON Schema (draft-07).
-
-**Top-level fields:**
-
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| `agent` | ✓ | string | Agent name |
-| `project` | ✓ | string | Project or org name |
-| `ecosystem` | ✓ | string | Primary blockchain ecosystem |
-| `wallets` | ✓ | array | List of wallet objects |
-| `website` | — | string (URI) | Project website |
-| `x` | — | string | X/Twitter handle |
-| `github` | — | string | GitHub handle |
-| `contact` | — | string | Contact email or URL |
-
-**Wallet object fields:**
-
-| Field | Required | Type | Description |
-|-------|----------|------|-------------|
-| `address` | ✓ | string | EVM address (`0x...`) |
-| `chain` | ✓ | enum | See supported chains below |
-| `role` | ✓ | enum | See wallet roles above |
-| `verification_method` | ✓ | enum | See verification methods above |
-| `evidence_url` | — | string (URI) | URL to verification evidence |
-| `notes` | — | string | Human-readable purpose |
-| `last_updated` | — | date | ISO 8601 date (YYYY-MM-DD) |
-| `active` | — | boolean | Is this wallet currently active? |
-
-**Supported chains:** `base`, `ethereum`, `arbitrum`, `optimism`, `polygon`, `solana`, `avalanche`, `bnb`, `zora`, `blast`, `linea`, `scroll`, `mode`, `other`
-
----
-
-## Add CI Validation
-
-Keep your manifest valid on every push. Copy [`.github/workflows/validate.yml`](./.github/workflows/validate.yml) into your repo:
+Create `.github/workflows/verify-wallets.yml`:
 
 ```yaml
-name: Validate Wallet Manifest
-
+name: Verify Agent Wallets
 on:
   push:
-    paths:
-      - ".x402books/wallets.json"
+    paths: ['.x402books/wallets.json']
   pull_request:
-    paths:
-      - ".x402books/wallets.json"
+    paths: ['.x402books/wallets.json']
 
 jobs:
-  validate:
+  verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-      - name: Install validator
-        run: git clone https://github.com/danbuildss/agent-wallet-manifest /tmp/avm && cd /tmp/avm && npm ci
-      - name: Validate manifest
-        run: node /tmp/avm/dist/validate.js .x402books/wallets.json
+      - uses: danbuildss/agent-wallet-manifest@v1
 ```
+
+**3. Add the badge to your README**
+
+```markdown
+[![Verified Agent Wallets](https://img.shields.io/badge/agent--wallets-verified-6DB874?style=flat)](https://www.x402books.xyz/registry/your-agent-slug)
+```
+
+That's it. Your agent now has a public financial identity profile at `https://www.x402books.xyz/registry/[slug]`.
+
+---
+
+## Wallet roles
+
+| Role | Description |
+|------|-------------|
+| `treasury` | Holds protocol reserves and long-term funds |
+| `revenue` | Receives income from services or API usage |
+| `expense` | Sends payments to providers or services |
+| `operator` | Hot wallet for agent-initiated on-chain operations |
+| `deployer` | Used to deploy contracts |
+| `fee_recipient` | Receives protocol or platform fees |
+| `payment_receiver` | Receives payments from users or integrations |
+| `token_contract` | Address of an associated token contract |
+| `token_bound_account` | ERC-6551 token-bound account |
+| `unknown` | Role not yet classified |
+
+---
+
+## How it connects
+
+```
+your repo
+  └── .x402books/wallets.json
+        │
+        ▼
+  x402Books registry          — indexes and classifies wallet activity
+        │
+        ▼
+  Luca verdict                — "Healthy treasury. Consistent settlement activity."
+        │
+        ▼
+  verification badge          — trust signal in your README
+```
+
+**x402Books** is the financial visibility layer. It reads your manifest, monitors on-chain activity, and classifies transactions (settlements, revenue, inference spend, internal transfers).
+
+**Luca** is the AI that sits on top. It reads x402Books data and generates human-readable financial verdicts: treasury health, settlement quality, runway signals.
+
+Every `.x402books/wallets.json` file in any public repo is automatically picked up and indexed. Every manifest becomes a registry profile. Every profile becomes a verification opportunity.
+
+---
+
+## Schema reference
+
+Full schema at [`schema/wallets.schema.json`](schema/wallets.schema.json).
+
+**Required fields:** `agent`, `project`, `ecosystem`, `wallets`
+
+**Each wallet requires:** `address`, `chain`, `role`, `verification_method`
+
+Supported chains: `base`, `ethereum`, `arbitrum`, `optimism`, `polygon`, `solana`, `avalanche`, `bnb`, `zora`, `blast`, `linea`, `scroll`, `mode`, `other`
+
+Verification methods: `repo_manifest`, `on_chain_signature`, `dns_record`, `social_post`, `multisig_ownership`
+
+---
+
+## Validate locally
+
+```bash
+npx @x402books/validate-manifest .x402books/wallets.json
+```
+
+Or use the online validator at [x402books.xyz/validate](https://www.x402books.xyz/validate).
 
 ---
 
 ## Examples
 
-- [`examples/luca.wallets.json`](./examples/luca.wallets.json) — Luca, the x402Books AI agent
-- [`examples/example-agent.wallets.json`](./examples/example-agent.wallets.json) — Starter template
+See [`/examples`](examples/) for real manifests:
+
+- [`luca.wallets.json`](examples/luca.wallets.json) — Luca, x402Books AI
+- [`aeon.wallets.json`](examples/aeon.wallets.json) — AEON Protocol
+- [`surplus.wallets.json`](examples/surplus.wallets.json) — Surplus
+- [`nipmod.wallets.json`](examples/nipmod.wallets.json) — Nipmod
 
 ---
 
-## Why `.x402books/`?
+## Badge
 
-The directory namespace is owned by x402Books AI, the financial intelligence platform for autonomous agents. This ensures manifests are indexed by the registry automatically, and lets x402Books generate verified financial reports and trust scores for any agent that publishes one.
-
----
-
-## Integration with x402Books AI
-
-When your manifest is live on GitHub:
-
-- Your agent is auto-importable to the [Agent Financial Registry](https://www.x402books.xyz)
-- Financial reports generated for your wallet will show **Manifest Verified**
-- Treasury health scoring uses your declared wallet roles to classify inflows and outflows correctly
-- Your agent becomes discoverable to other agents and builders in the ecosystem
+See [`BADGE.md`](BADGE.md) for badge variants and dynamic registry badge URLs.
 
 ---
 
-## License
+## Contributing
 
-MIT — free to use, fork, and build on.
+This is an open standard. PRs welcome for:
+- New wallet roles
+- Additional chains
+- Verification methods
+- Tooling improvements
 
 ---
 
-*Built by [x402Books AI](https://www.x402books.xyz) — Financial intelligence platform for autonomous agents.*
+*Built by [x402Books](https://www.x402books.xyz) — the financial operating system for autonomous entities.*

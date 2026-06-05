@@ -1,0 +1,29 @@
+{
+  "agent": "Nipmod",
+  "project": "Nipmod",
+  "ecosystem": "Base",
+  "website": "https://nipmod.xyz",
+  "x": "@nipmod",
+  "wallets": [
+    {
+      "address": "0xe1b5c3a7d9f2e6b4c8a0d3f7e5b2a9c6d4f1e8b3",
+      "chain": "base",
+      "role": "payment_receiver",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/nipmod/nipmod",
+      "notes": "Primary wallet for receiving payments and API revenue.",
+      "last_updated": "2026-05-20",
+      "active": true
+    },
+    {
+      "address": "0xf2c6d4b8a1e5c9f3d7b0a4e8c2f6d0b4a8e2c6f0",
+      "chain": "base",
+      "role": "operator",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/nipmod/nipmod",
+      "notes": "Operational wallet used for agent-initiated transactions.",
+      "last_updated": "2026-05-20",
+      "active": true
+    }
+  ]
+}
