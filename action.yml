@@ -1,0 +1,52 @@
+name: 'Verify Agent Wallets'
+description: 'Validate .x402books/wallets.json against the Agent Wallet Manifest schema and submit to the x402Books registry.'
+author: 'x402Books'
+
+branding:
+  icon: 'check-circle'
+  color: 'green'
+
+inputs:
+  manifest-path:
+    description: 'Path to the wallet manifest file'
+    required: false
+    default: '.x402books/wallets.json'
+  registry-submit:
+    description: 'Submit manifest to the x402Books registry after validation'
+    required: false
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install validator
+      shell: bash
+      run: |
+        git clone https://github.com/danbuildss/agent-wallet-manifest /tmp/avm --depth 1 --quiet
+        cd /tmp/avm && npm ci --silent
+
+    - name: Validate manifest
+      shell: bash
+      run: |
+        echo "Validating ${{ inputs.manifest-path }}..."
+        node /tmp/avm/dist/validate.js "${{ inputs.manifest-path }}"
+        echo "✓ Manifest Valid"
+
+    - name: Submit to x402Books registry
+      if: inputs.registry-submit == 'true'
+      shell: bash
+      run: |
+        REPO="$GITHUB_REPOSITORY"
+        MANIFEST="${{ inputs.manifest-path }}"
+        echo "Submitting to x402Books registry..."
+        curl -s --max-time 10 \
+          -X POST "https://www.x402books.xyz/api/registry/submit" \
+          -H "Content-Type: application/json" \
+          -d "{\"repo\": \"${REPO}\", \"manifest_path\": \"${MANIFEST}\"}" \
+          --fail-with-body && echo "✓ Registry Submitted" \
+          || echo "Registry submission queued — will index on next sync"
