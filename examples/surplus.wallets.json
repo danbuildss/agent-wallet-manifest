@@ -1,0 +1,39 @@
+{
+  "agent": "Surplus",
+  "project": "Surplus",
+  "ecosystem": "Base",
+  "website": "https://surplus.xyz",
+  "x": "@surplusprotocol",
+  "wallets": [
+    {
+      "address": "0xa8d4f6b2e0c5a9d3f7b1e5c9a3d7f1b5e9c3a7d1",
+      "chain": "base",
+      "role": "revenue",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/surplus-protocol/surplus",
+      "notes": "Receives routing fees from inference provider settlements.",
+      "last_updated": "2026-05-20",
+      "active": true
+    },
+    {
+      "address": "0xb9e5a3c7d1f5b9e3a7c1d5f9b3e7a1c5d9f3b7e1",
+      "chain": "base",
+      "role": "expense",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/surplus-protocol/surplus",
+      "notes": "Sends payments to inference providers on behalf of agents using Surplus routing.",
+      "last_updated": "2026-05-20",
+      "active": true
+    },
+    {
+      "address": "0xc0f6b4d8e2a0c4f8b2d6e0a4c8f2b6d0e4a8c2f6",
+      "chain": "base",
+      "role": "treasury",
+      "verification_method": "repo_manifest",
+      "evidence_url": "https://github.com/surplus-protocol/surplus",
+      "notes": "Protocol treasury managing Surplus liquidity and reserves.",
+      "last_updated": "2026-05-20",
+      "active": true
+    }
+  ]
+}
