@@ -1,6 +1,6 @@
 # Agent Wallet Manifest
 
-[![Verified Agent Wallets](https://img.shields.io/badge/agent--wallets-verified-6DB874?style=flat)](https://www.x402books.xyz/registry/luca)
+[![x402Books](https://www.x402books.xyz/api/badge/danbuildss-agent-wallet-manifest.svg)](https://www.x402books.xyz/registry/luca)
 
 The open standard for autonomous agent financial identity.
 
@@ -58,11 +58,15 @@ jobs:
       - uses: danbuildss/agent-wallet-manifest@v1
 ```
 
-**3. Add the badge to your README**
+**3. Copy your badge from the action output**
+
+After the action runs, the step summary prints your badge markdown ready to copy:
 
 ```markdown
-[![Verified Agent Wallets](https://img.shields.io/badge/agent--wallets-verified-6DB874?style=flat)](https://www.x402books.xyz/registry/your-agent-slug)
+[![x402Books](https://www.x402books.xyz/api/badge/YOUR-AGENT-SLUG.svg)](https://www.x402books.xyz/registry/YOUR-AGENT-SLUG)
 ```
+
+The badge updates live as your verification status changes. See [`BADGE.md`](BADGE.md) for all badge variants and status levels.
 
 That's it. Your agent now has a public financial identity profile at `https://www.x402books.xyz/registry/[slug]`.
 
@@ -98,7 +102,7 @@ your repo
   Luca verdict                — "Healthy treasury. Consistent settlement activity."
         │
         ▼
-  verification badge          — trust signal in your README
+  live badge in your README   — trust signal, updates as status changes
 ```
 
 **x402Books** is the financial visibility layer. It reads your manifest, monitors on-chain activity, and classifies transactions (settlements, revenue, inference spend, internal transfers).
@@ -146,7 +150,7 @@ See [`/examples`](examples/) for real manifests:
 
 ## Badge
 
-See [`BADGE.md`](BADGE.md) for badge variants and dynamic registry badge URLs.
+See [`BADGE.md`](BADGE.md) for the dynamic badge, static fallback, all status levels, and how the action prints your badge markdown automatically.
 
 ---
 

@@ -1,41 +1,44 @@
-# Verified Agent Wallets Badge
+# x402Books Agent Wallet Badge
 
-Once your `.x402books/wallets.json` manifest is published, paste this badge into your README to signal verified financial identity.
+Every verified agent gets a live badge that reflects their current registry status. Add it to your README to signal verified financial identity.
 
-## Badge Markdown
+## Dynamic badge (recommended)
+
+This badge updates automatically as your registry status changes (Candidate → Verified):
 
 ```markdown
-[![Verified Agent Wallets](https://img.shields.io/badge/agent--wallets-verified-6DB874?style=flat&logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0id2hpdGUiIGQ9Ik05IDEybDIgMiA0LTQtMS40LTEuNEwxMSAxMy4ybC0uNi0uNkw5IDEyem0zLTEwQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyem0wIDE4Yy00LjQyIDAtOC0zLjU4LTgtOHMzLjU4LTggOC04IDggMy41OCA4IDgtMy41OCA4LTggOHoiLz48L3N2Zz4=&logoColor=white)](https://www.x402books.xyz/registry/YOUR-AGENT-SLUG)
+[![x402Books](https://www.x402books.xyz/api/badge/YOUR-AGENT-SLUG.svg)](https://www.x402books.xyz/registry/YOUR-AGENT-SLUG)
 ```
 
 Replace `YOUR-AGENT-SLUG` with your agent's slug on x402Books (e.g. `luca`, `aeon`, `surplus`).
 
-## Preview
+**Slug format:** lowercase agent name, spaces replaced with hyphens. When in doubt, check your registry profile URL at `https://www.x402books.xyz/registry/[slug]`.
 
-![Verified Agent Wallets](https://img.shields.io/badge/agent--wallets-verified-6DB874?style=flat)
+## Static fallback badge
 
-## What this signals
+For repos that can't reach the x402Books API (e.g. air-gapped CI), use the static shields.io badge:
 
-- Your agent's wallets are declared in `.x402books/wallets.json`
-- The manifest is validated against the [Agent Wallet Manifest schema](schema/wallets.schema.json)
-- Your agent has a public financial identity profile on [x402Books](https://www.x402books.xyz)
-
-## Badge URL structure
-
-```
-https://img.shields.io/badge/agent--wallets-verified-6DB874?style=flat
+```markdown
+[![x402Books](https://img.shields.io/badge/agent--wallets-verified-6DB874?style=flat)](https://www.x402books.xyz/registry/YOUR-AGENT-SLUG)
 ```
 
-For a dynamic badge that reflects live registry status:
+## Badge states
 
-```
-https://www.x402books.xyz/api/badge/[YOUR-AGENT-SLUG].svg
-```
+The dynamic badge reflects your live verification level:
 
-## How to get verified
+| Status | Badge color | Meaning |
+|--------|-------------|--------|
+| `verified` | `#6DB874` green | DID-linked proof confirmed |
+| `claimed` | `#6DB874` green | Claimed by team |
+| `wallets-declared` | `#3B82F6` blue | Manifest submitted, pending review |
+| `candidate` | `#94A3B8` grey | Luca found wallets from public data |
+| `unknown` | `#94A3B8` grey | Not yet indexed |
 
-1. Add `.x402books/wallets.json` to your repo ([see schema](schema/wallets.schema.json))
-2. Add the GitHub Action to validate on every push:
+## How to get your badge
+
+**Step 1.** Add `.x402books/wallets.json` to your repo ([see schema](schema/wallets.schema.json) or [validate online](https://www.x402books.xyz/validate)).
+
+**Step 2.** Add the GitHub Action — it prints your badge markdown automatically after every successful run:
 
 ```yaml
 # .github/workflows/verify-wallets.yml
@@ -54,5 +57,18 @@ jobs:
       - uses: danbuildss/agent-wallet-manifest@v1
 ```
 
-3. Your agent profile goes live at `https://www.x402books.xyz/registry/[slug]`
-4. Paste the badge in your README
+After the action runs, the step summary and logs will contain:
+
+```
+══════════════════════════════════════════════════
+✅ Agent Wallet Manifest verified
+
+Add this badge to your README:
+
+  [![x402Books](https://www.x402books.xyz/api/badge/your-org-your-repo.svg)](https://www.x402books.xyz/registry/your-org-your-repo)
+══════════════════════════════════════════════════
+```
+
+**Step 3.** Copy the badge markdown from the action output and paste it into your README.
+
+**Step 4.** Your agent profile is live at `https://www.x402books.xyz/registry/[slug]`.

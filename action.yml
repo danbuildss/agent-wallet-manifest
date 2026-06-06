@@ -50,3 +50,38 @@ runs:
           -d "{\"repo\": \"${REPO}\", \"manifest_path\": \"${MANIFEST}\"}" \
           --fail-with-body && echo "✓ Registry Submitted" \
           || echo "Registry submission queued — will index on next sync"
+
+    - name: Print badge markdown
+      if: inputs.registry-submit == 'true'
+      shell: bash
+      run: |
+        SLUG=$(echo "$GITHUB_REPOSITORY" | tr '/' '-' | tr '[:upper:]' '[:lower:]')
+        BADGE_URL="https://www.x402books.xyz/api/badge/${SLUG}.svg"
+        REGISTRY_URL="https://www.x402books.xyz/registry/${SLUG}"
+        BADGE_MD="[![x402Books](${BADGE_URL})](${REGISTRY_URL})"
+
+        echo ""
+        echo "══════════════════════════════════════════════════"
+        echo "✅ Agent Wallet Manifest verified"
+        echo ""
+        echo "Add this badge to your README:"
+        echo ""
+        echo "  ${BADGE_MD}"
+        echo ""
+        echo "Registry profile: ${REGISTRY_URL}"
+        echo "Validate online:  https://www.x402books.xyz/validate"
+        echo "══════════════════════════════════════════════════"
+
+        # Also write to GitHub step summary if available
+        if [ -n "$GITHUB_STEP_SUMMARY" ]; then
+          echo "## ✅ Agent Wallet Manifest Verified" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Add this badge to your README:" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`markdown" >> $GITHUB_STEP_SUMMARY
+          echo "${BADGE_MD}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Registry profile:** [${REGISTRY_URL}](${REGISTRY_URL})" >> $GITHUB_STEP_SUMMARY
+          echo "**Validate online:** [x402books.xyz/validate](https://www.x402books.xyz/validate)" >> $GITHUB_STEP_SUMMARY
+        fi
