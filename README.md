@@ -8,7 +8,7 @@ The open standard for autonomous agent financial identity.
 
 ## The problem
 
-Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent. Anyone can claim a wallet address. Projects can't prove which addresses are theirs. Financial activity is unreadable, unauditable, and untrustworthy. The Agent Wallet Manifest fixes that: a single `.x402books/wallets.json` file in your repo becomes a signed, verifiable declaration of your agent's financial identity — publicly indexed on [x402Books](https://www.x402books.xyz) and interpreted by [Luca](https://www.x402books.xyz/luca).
+Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent. Anyone can claim a wallet address. Projects can't prove which addresses are theirs. Financial activity is unreadable, unauditable, and untrustworthy. The Agent Wallet Manifest fixes that: a single `.agent/wallets.json` file in your repo becomes a signed, verifiable declaration of your agent's financial identity — publicly indexed on [x402Books](https://www.x402books.xyz) and interpreted by [Luca](https://www.x402books.xyz/luca).
 
 ---
 
@@ -16,7 +16,7 @@ Autonomous agents move real money — paying for inference, receiving API revenu
 
 **1. Add your manifest**
 
-Create `.x402books/wallets.json` in your repo:
+Create `.agent/wallets.json` in your repo:
 
 ```json
 {
@@ -46,9 +46,9 @@ Create `.github/workflows/verify-wallets.yml`:
 name: Verify Agent Wallets
 on:
   push:
-    paths: ['.x402books/wallets.json']
+    paths: ['.agent/wallets.json']
   pull_request:
-    paths: ['.x402books/wallets.json']
+    paths: ['.agent/wallets.json']
 
 jobs:
   verify:
@@ -93,7 +93,7 @@ That's it. Your agent now has a public financial identity profile at `https://ww
 
 ```
 your repo
-  └── .x402books/wallets.json
+  └── .agent/wallets.json
         │
         ▼
   x402Books registry          — indexes and classifies wallet activity
@@ -109,7 +109,7 @@ your repo
 
 **Luca** is the AI that sits on top. It reads x402Books data and generates human-readable financial verdicts: treasury health, settlement quality, runway signals.
 
-Every `.x402books/wallets.json` file in any public repo is automatically picked up and indexed. Every manifest becomes a registry profile. Every profile becomes a verification opportunity.
+Every `.agent/wallets.json` file in any public repo is automatically picked up and indexed. Every manifest becomes a registry profile. Every profile becomes a verification opportunity.
 
 ---
 
@@ -130,7 +130,7 @@ Verification methods: `repo_manifest`, `on_chain_signature`, `dns_record`, `soci
 ## Validate locally
 
 ```bash
-npx @x402books/validate-manifest .x402books/wallets.json
+npx @x402books/validate-manifest .agent/wallets.json
 ```
 
 Or use the online validator at [x402books.xyz/validate](https://www.x402books.xyz/validate).

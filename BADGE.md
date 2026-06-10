@@ -36,7 +36,7 @@ The dynamic badge reflects your live verification level:
 
 ## How to get your badge
 
-**Step 1.** Add `.x402books/wallets.json` to your repo ([see schema](schema/wallets.schema.json) or [validate online](https://www.x402books.xyz/validate)).
+**Step 1.** Add `.agent/wallets.json` to your repo ([see schema](schema/wallets.schema.json) or [validate online](https://www.x402books.xyz/validate)).
 
 **Step 2.** Add the GitHub Action — it prints your badge markdown automatically after every successful run:
 
@@ -45,9 +45,9 @@ The dynamic badge reflects your live verification level:
 name: Verify Agent Wallets
 on:
   push:
-    paths: ['.x402books/wallets.json']
+    paths: ['.agent/wallets.json']
   pull_request:
-    paths: ['.x402books/wallets.json']
+    paths: ['.agent/wallets.json']
 
 jobs:
   verify:

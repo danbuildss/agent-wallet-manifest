@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/x402books/agent-wallet-manifest/schema/wallets.schema.json",
+  "$id": "https://github.com/danbuildss/agent-wallet-manifest/schema/wallets.schema.json",
   "title": "Agent Wallet Manifest",
-  "description": "Standard schema for publishing verified wallet addresses used by autonomous agents.",
+  "description": "Standard schema for publishing verified wallet addresses used by autonomous agents. Place this file at .agent/wallets.json in your repository.",
   "type": "object",
   "required": ["agent", "project", "ecosystem", "wallets"],
   "additionalProperties": false,
@@ -45,7 +45,7 @@
     },
     "did": {
       "type": "string",
-      "description": "Decentralized Identifier (DID) for the agent, e.g. from GitLawb.",
+      "description": "Decentralized Identifier (DID) for the agent.",
       "pattern": "^did:[a-z]+:.+$"
     },
     "wallets": {

@@ -3,10 +3,10 @@ name: Validate Wallet Manifest
 on:
   push:
     paths:
-      - ".x402books/wallets.json"
+      - ".agent/wallets.json"
   pull_request:
     paths:
-      - ".x402books/wallets.json"
+      - ".agent/wallets.json"
 
 jobs:
   validate:
@@ -26,4 +26,4 @@ jobs:
           cd /tmp/avm && npm ci
 
       - name: Validate manifest
-        run: node /tmp/avm/dist/validate.js .x402books/wallets.json
+        run: node /tmp/avm/dist/validate.js .agent/wallets.json
