@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - ".agent/wallets.json"
+      - ".x402books/wallets.json"
   pull_request:
     paths:
       - ".agent/wallets.json"
+      - ".x402books/wallets.json"
 
 jobs:
   validate:
@@ -25,5 +27,17 @@ jobs:
           git clone https://github.com/danbuildss/agent-wallet-manifest /tmp/avm
           cd /tmp/avm && npm ci
 
+      - name: Resolve manifest path
+        run: |
+          if [ -f ".agent/wallets.json" ]; then
+            echo "MANIFEST_PATH=.agent/wallets.json" >> $GITHUB_ENV
+          elif [ -f ".x402books/wallets.json" ]; then
+            echo "MANIFEST_PATH=.x402books/wallets.json" >> $GITHUB_ENV
+            echo "Note: using legacy path — consider migrating to .agent/wallets.json"
+          else
+            echo "No manifest found at .agent/wallets.json or .x402books/wallets.json"
+            exit 1
+          fi
+
       - name: Validate manifest
-        run: node /tmp/avm/dist/validate.js .agent/wallets.json
+        run: node /tmp/avm/dist/validate.js $MANIFEST_PATH

@@ -6,33 +6,23 @@
   "x": "@AEONProtocol",
   "wallets": [
     {
-      "address": "0xa30f2dce4c9e9be90a3e2b9c8b5e8f5d3c1b7e0a",
+      "address": "0xF1E958db7D1e4C074377946018Ad645db4FB158e",
       "chain": "base",
       "role": "treasury",
       "verification_method": "repo_manifest",
       "evidence_url": "https://github.com/aeon-protocol/aeon",
-      "notes": "Primary treasury wallet. Holds protocol reserves and manages settlement liquidity.",
-      "last_updated": "2026-05-20",
+      "notes": "Primary treasury wallet. Confirmed directly by AEON team.",
+      "last_updated": "2026-06-16",
       "active": true
     },
     {
-      "address": "0xc94d1e3f7b2a5c8e0d4f6b9a3e2c7d5f1b8a0e4c",
+      "address": "0x67976cebb5266b50a08c0dcb676e03baf305e3a2",
       "chain": "base",
-      "role": "fee_recipient",
+      "role": "deployer",
       "verification_method": "repo_manifest",
       "evidence_url": "https://github.com/aeon-protocol/aeon",
-      "notes": "Receives protocol fees from x402 execution and settlement events.",
-      "last_updated": "2026-05-20",
-      "active": true
-    },
-    {
-      "address": "0xd7e4a2f1c6b9e3a8d5f0c4b7e2a9d6f3c0b8e5a2",
-      "chain": "base",
-      "role": "operator",
-      "verification_method": "repo_manifest",
-      "evidence_url": "https://github.com/aeon-protocol/aeon",
-      "notes": "Hot wallet used by the AEON execution engine for on-chain operations.",
-      "last_updated": "2026-05-20",
+      "notes": "Contract deployer wallet. Confirmed directly by AEON team.",
+      "last_updated": "2026-06-16",
       "active": true
     }
   ]

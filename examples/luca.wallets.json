@@ -1,9 +1,9 @@
 {
   "agent": "Luca",
-  "project": "x402Books AI",
+  "project": "Zetta AI",
   "ecosystem": "Base",
-  "website": "https://www.x402books.xyz",
-  "x": "@AskLucaAI",
+  "website": "https://www.zettaai.co",
+  "x": "@zettaaidotco",
   "github": "@danbuildss",
   "did": "did:key:z6Mkszs82vnrmmctTyybGEMN7BDHg2awFEdpYYzfqXhGi1rf",
   "wallets": [
@@ -13,8 +13,8 @@
       "role": "payment_receiver",
       "verification_method": "repo_manifest",
       "evidence_url": "https://github.com/danbuildss/agent-wallet-manifest",
-      "notes": "Primary wallet. Receives all x402Books AI API revenue via BANKR x402 Cloud.",
-      "last_updated": "2026-05-20",
+      "notes": "Primary wallet. Receives all Zetta AI API revenue.",
+      "last_updated": "2026-06-16",
       "active": true
     },
     {
@@ -23,8 +23,8 @@
       "role": "token_contract",
       "verification_method": "repo_manifest",
       "evidence_url": "https://basescan.org/address/0xb2b335f832fd3f43461ebd1cd9831d93d9ca4ba3",
-      "notes": "$LUCA — the x402Books AI ecosystem token on Base.",
-      "last_updated": "2026-05-20",
+      "notes": "$LUCA — the Zetta AI ecosystem token on Base.",
+      "last_updated": "2026-06-16",
       "active": true
     }
   ]

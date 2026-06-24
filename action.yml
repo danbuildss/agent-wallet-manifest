@@ -1,6 +1,6 @@
 name: 'Verify Agent Wallets'
-description: 'Validate .agent/wallets.json against the Agent Wallet Manifest schema and submit to the x402Books registry.'
-author: 'x402Books'
+description: 'Validate .agent/wallets.json against the Agent Wallet Manifest schema and submit to the Zetta AI registry.'
+author: 'Zetta AI'
 
 branding:
   icon: 'check-circle'
@@ -12,7 +12,7 @@ inputs:
     required: false
     default: '.agent/wallets.json'
   registry-submit:
-    description: 'Submit manifest to the x402Books registry after validation'
+    description: 'Submit manifest to the Zetta AI registry after validation'
     required: false
     default: 'true'
 
@@ -30,24 +30,35 @@ runs:
         git clone https://github.com/danbuildss/agent-wallet-manifest /tmp/avm --depth 1 --quiet
         cd /tmp/avm && npm ci --silent
 
+    - name: Resolve manifest path
+      shell: bash
+      run: |
+        MANIFEST="${{ inputs.manifest-path }}"
+        # Support legacy .x402books/wallets.json path
+        if [ ! -f "$MANIFEST" ] && [ -f ".x402books/wallets.json" ]; then
+          echo "MANIFEST_PATH=.x402books/wallets.json" >> $GITHUB_ENV
+          echo "Note: using legacy path .x402books/wallets.json — consider migrating to .agent/wallets.json"
+        else
+          echo "MANIFEST_PATH=$MANIFEST" >> $GITHUB_ENV
+        fi
+
     - name: Validate manifest
       shell: bash
       run: |
-        echo "Validating ${{ inputs.manifest-path }}..."
-        node /tmp/avm/dist/validate.js "${{ inputs.manifest-path }}"
+        echo "Validating $MANIFEST_PATH..."
+        node /tmp/avm/dist/validate.js "$MANIFEST_PATH"
         echo "✓ Manifest Valid"
 
-    - name: Submit to x402Books registry
+    - name: Submit to Zetta registry
       if: inputs.registry-submit == 'true'
       shell: bash
       run: |
         REPO="$GITHUB_REPOSITORY"
-        MANIFEST="${{ inputs.manifest-path }}"
-        echo "Submitting to x402Books registry..."
+        echo "Submitting to Zetta registry..."
         curl -s --max-time 10 \
-          -X POST "https://www.x402books.xyz/api/registry/submit" \
+          -X POST "https://www.zettaai.co/api/registry/submit" \
           -H "Content-Type: application/json" \
-          -d "{\"repo\": \"${REPO}\", \"manifest_path\": \"${MANIFEST}\"}" \
+          -d "{\"repo\": \"${REPO}\", \"manifest_path\": \"${MANIFEST_PATH}\"}" \
           --fail-with-body && echo "✓ Registry Submitted" \
           || echo "Registry submission queued — will index on next sync"
 
@@ -56,9 +67,9 @@ runs:
       shell: bash
       run: |
         SLUG=$(echo "$GITHUB_REPOSITORY" | tr '/' '-' | tr '[:upper:]' '[:lower:]')
-        BADGE_URL="https://www.x402books.xyz/api/badge/${SLUG}.svg"
-        REGISTRY_URL="https://www.x402books.xyz/registry/${SLUG}"
-        BADGE_MD="[![x402Books](${BADGE_URL})](${REGISTRY_URL})"
+        BADGE_URL="https://www.zettaai.co/api/badge/${SLUG}.svg"
+        REGISTRY_URL="https://www.zettaai.co/registry/${SLUG}"
+        BADGE_MD="[![Zetta AI](${BADGE_URL})](${REGISTRY_URL})"
 
         echo ""
         echo "══════════════════════════════════════════════════"
@@ -69,7 +80,7 @@ runs:
         echo "  ${BADGE_MD}"
         echo ""
         echo "Registry profile: ${REGISTRY_URL}"
-        echo "Validate online:  https://www.x402books.xyz/validate"
+        echo "Validate online:  https://www.zettaai.co/validate"
         echo "══════════════════════════════════════════════════"
 
         if [ -n "$GITHUB_STEP_SUMMARY" ]; then
@@ -82,5 +93,5 @@ runs:
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**Registry profile:** [${REGISTRY_URL}](${REGISTRY_URL})" >> $GITHUB_STEP_SUMMARY
-          echo "**Validate online:** [x402books.xyz/validate](https://www.x402books.xyz/validate)" >> $GITHUB_STEP_SUMMARY
+          echo "**Validate online:** [zettaai.co/validate](https://www.zettaai.co/validate)" >> $GITHUB_STEP_SUMMARY
         fi

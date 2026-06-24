@@ -1,6 +1,6 @@
 # Agent Wallet Manifest
 
-[![x402Books](https://www.x402books.xyz/api/badge/danbuildss-agent-wallet-manifest.svg)](https://www.x402books.xyz/registry/luca)
+[![Zetta AI](https://www.zettaai.co/api/badge/danbuildss-agent-wallet-manifest.svg)](https://www.zettaai.co/registry/luca)
 
 The open standard for autonomous agent financial identity.
 
@@ -8,7 +8,7 @@ The open standard for autonomous agent financial identity.
 
 ## The problem
 
-Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent. Anyone can claim a wallet address. Projects can't prove which addresses are theirs. Financial activity is unreadable, unauditable, and untrustworthy. The Agent Wallet Manifest fixes that: a single `.agent/wallets.json` file in your repo becomes a signed, verifiable declaration of your agent's financial identity — publicly indexed on [x402Books](https://www.x402books.xyz) and interpreted by [Luca](https://www.x402books.xyz/luca).
+Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent. Anyone can claim a wallet address. Projects can't prove which addresses are theirs. Financial activity is unreadable, unauditable, and untrustworthy. The Agent Wallet Manifest fixes that: a single `.agent/wallets.json` file in your repo becomes a signed, verifiable declaration of your agent's financial identity — publicly indexed on [Zetta AI](https://www.zettaai.co) and interpreted by [Luca](https://www.zettaai.co/luca).
 
 ---
 
@@ -31,7 +31,7 @@ Create `.agent/wallets.json` in your repo:
       "role": "payment_receiver",
       "verification_method": "repo_manifest",
       "notes": "Primary wallet for API revenue.",
-      "last_updated": "2026-06-05",
+      "last_updated": "2026-06-16",
       "active": true
     }
   ]
@@ -58,17 +58,35 @@ jobs:
       - uses: danbuildss/agent-wallet-manifest@v1
 ```
 
+On every push the action will:
+- ✓ Validate your manifest against the schema
+- ✓ Submit it to the Zetta registry
+- ✓ Print your badge markdown in the job summary — ready to copy
+
 **3. Copy your badge from the action output**
 
-After the action runs, the step summary prints your badge markdown ready to copy:
+After the action runs, the step summary shows:
 
 ```markdown
-[![x402Books](https://www.x402books.xyz/api/badge/YOUR-AGENT-SLUG.svg)](https://www.x402books.xyz/registry/YOUR-AGENT-SLUG)
+[![Zetta AI](https://www.zettaai.co/api/badge/YOUR-AGENT-SLUG.svg)](https://www.zettaai.co/registry/YOUR-AGENT-SLUG)
 ```
 
-The badge updates live as your verification status changes. See [`BADGE.md`](BADGE.md) for all badge variants and status levels.
+The badge updates live as your verification status changes. See [`BADGE.md`](BADGE.md) for all variants and status levels.
 
-That's it. Your agent now has a public financial identity profile at `https://www.x402books.xyz/registry/[slug]`.
+That's it. Your agent has a public financial identity profile at `https://www.zettaai.co/registry/[slug]`.
+
+---
+
+## Legacy path support
+
+Already using `.x402books/wallets.json`? No migration needed — both paths are supported:
+
+| Path | Status |
+|------|--------|
+| `.agent/wallets.json` | Standard (recommended) |
+| `.x402books/wallets.json` | Legacy (still works) |
+
+The action detects both automatically.
 
 ---
 
@@ -87,6 +105,8 @@ That's it. Your agent now has a public financial identity profile at `https://ww
 | `token_bound_account` | ERC-6551 token-bound account |
 | `unknown` | Role not yet classified |
 
+> **Note:** Token contracts are never books-eligible. Only `treasury`, `revenue`, `expense`, `operator`, `deployer`, `fee_recipient`, and `payment_receiver` wallets produce financial records in Zetta.
+
 ---
 
 ## How it connects
@@ -96,18 +116,19 @@ your repo
   └── .agent/wallets.json
         │
         ▼
-  x402Books registry          — indexes and classifies wallet activity
+  Zetta registry              — indexes and classifies wallet activity
         │
         ▼
   Luca verdict                — "Healthy treasury. Consistent settlement activity."
         │
         ▼
-  live badge in your README   — trust signal, updates as status changes
+  live badge in your README   — updates automatically as status changes
+  Luca Skills API             — callable financial intelligence for other agents
 ```
 
-**x402Books** is the financial visibility layer. It reads your manifest, monitors on-chain activity, and classifies transactions (settlements, revenue, inference spend, internal transfers).
+**Zetta AI** is the financial visibility layer. It reads your manifest, monitors on-chain activity, and classifies transactions (settlements, revenue, inference spend, internal transfers).
 
-**Luca** is the AI that sits on top. It reads x402Books data and generates human-readable financial verdicts: treasury health, settlement quality, runway signals.
+**Luca** is the AI that sits on top. It reads Zetta data and generates human-readable financial verdicts: treasury health, settlement quality, runway signals — and exposes them as callable skills at `https://www.zettaai.co/api/luca/skills`.
 
 Every `.agent/wallets.json` file in any public repo is automatically picked up and indexed. Every manifest becomes a registry profile. Every profile becomes a verification opportunity.
 
@@ -127,13 +148,14 @@ Verification methods: `repo_manifest`, `on_chain_signature`, `dns_record`, `soci
 
 ---
 
-## Validate locally
+## Validate
 
+Online validator (recommended): [zettaai.co/validate](https://www.zettaai.co/validate)
+
+Locally:
 ```bash
-npx @x402books/validate-manifest .agent/wallets.json
+node dist/validate.js .agent/wallets.json
 ```
-
-Or use the online validator at [x402books.xyz/validate](https://www.x402books.xyz/validate).
 
 ---
 
@@ -141,7 +163,7 @@ Or use the online validator at [x402books.xyz/validate](https://www.x402books.xy
 
 See [`/examples`](examples/) for real manifests:
 
-- [`luca.wallets.json`](examples/luca.wallets.json) — Luca, x402Books AI
+- [`luca.wallets.json`](examples/luca.wallets.json) — Luca, Zetta AI
 - [`aeon.wallets.json`](examples/aeon.wallets.json) — AEON Protocol
 - [`surplus.wallets.json`](examples/surplus.wallets.json) — Surplus
 - [`nipmod.wallets.json`](examples/nipmod.wallets.json) — Nipmod
@@ -164,4 +186,4 @@ This is an open standard. PRs welcome for:
 
 ---
 
-*Built by [x402Books](https://www.x402books.xyz) — the financial operating system for autonomous entities.*
+*Built by [Zetta AI](https://www.zettaai.co) — the financial operating system for autonomous entities.*
