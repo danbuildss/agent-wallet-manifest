@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install agent-wallet-manifest validator
+      - name: Install validator
         run: |
           git clone https://github.com/danbuildss/agent-wallet-manifest /tmp/avm
           cd /tmp/avm && npm ci

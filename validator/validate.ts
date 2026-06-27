@@ -15,8 +15,8 @@ function run() {
   const target = process.argv[2];
 
   if (!target) {
-    console.error("Usage: npx agent-wallet-manifest validate <path-to-wallets.json>");
-    console.error("Example: npx agent-wallet-manifest validate .x402books/wallets.json");
+    console.error("Usage: node dist/validate.js <path-to-wallets.json>");
+    console.error("Example: node dist/validate.js .agent/wallets.json");
     process.exit(1);
   }
 
@@ -39,11 +39,11 @@ function run() {
 
   if (valid) {
     const manifest = data as { agent: string; project: string; wallets: unknown[] };
-    console.log(`✓ Valid manifest — ${manifest.agent} (${manifest.project})`);
+    console.log(`✓ Valid — ${manifest.agent} (${manifest.project})`);
     console.log(`  ${manifest.wallets.length} wallet(s) declared`);
     process.exit(0);
   } else {
-    console.error(`✗ Invalid manifest — ${filePath}`);
+    console.error(`✗ Invalid — ${filePath}`);
     console.error("");
     for (const err of validate.errors ?? []) {
       const field = err.instancePath || "(root)";

@@ -1,8 +1,8 @@
 {
   "name": "agent-wallet-manifest",
-  "version": "0.1.0",
-  "description": "Standard schema and validator for publishing verified wallet addresses used by autonomous agents.",
-  "keywords": ["agent", "wallet", "base", "x402", "manifest", "standard", "ai-agent", "onchain"],
+  "version": "1.0.0",
+  "description": "Open standard schema and validator for publishing verified wallet addresses used by autonomous agents.",
+  "keywords": ["agent", "wallet", "manifest", "standard", "ai-agent", "onchain", "financial-identity"],
   "homepage": "https://github.com/danbuildss/agent-wallet-manifest",
   "repository": {
     "type": "git",
