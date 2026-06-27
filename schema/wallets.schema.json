@@ -1,12 +1,16 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/danbuildss/agent-wallet-manifest/schema/wallets.schema.json",
+  "$id": "https://schema.zettaai.co/wallets.v1.json",
   "title": "Agent Wallet Manifest",
-  "description": "Standard schema for publishing verified wallet addresses used by autonomous agents. Place this file at .agent/wallets.json in your repository.",
+  "description": "Open standard for publishing verified wallet addresses used by autonomous agents. Place this file at .agent/wallets.json in your repository.",
   "type": "object",
   "required": ["agent", "project", "ecosystem", "wallets"],
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "JSON Schema reference."
+    },
     "agent": {
       "type": "string",
       "description": "The name of the agent or AI system.",
@@ -22,16 +26,21 @@
     "ecosystem": {
       "type": "string",
       "description": "The primary blockchain ecosystem the agent operates on.",
-      "examples": ["Base", "Ethereum", "Solana", "Arbitrum", "Optimism", "Polygon"]
+      "examples": ["base", "ethereum", "solana", "arbitrum", "optimism", "polygon"]
     },
     "website": {
       "type": "string",
       "format": "uri",
       "description": "Public website for the agent or project."
     },
-    "x": {
+    "x_handle": {
       "type": "string",
       "description": "X (Twitter) handle, with or without @.",
+      "pattern": "^@?[A-Za-z0-9_]{1,50}$"
+    },
+    "x": {
+      "type": "string",
+      "description": "X (Twitter) handle. Legacy alias for x_handle — prefer x_handle in new manifests.",
       "pattern": "^@?[A-Za-z0-9_]{1,50}$"
     },
     "github": {
@@ -59,7 +68,7 @@
         "properties": {
           "address": {
             "type": "string",
-            "description": "The wallet address (EVM or chain-native format).",
+            "description": "The wallet address (EVM format).",
             "pattern": "^0x[a-fA-F0-9]{40}$",
             "examples": ["0x1234567890abcdef1234567890abcdef12345678"]
           },
@@ -85,13 +94,14 @@
           },
           "role": {
             "type": "string",
-            "description": "The functional role of this wallet in the agent's operations.",
+            "description": "The functional role of this wallet. fee_recipient is a legacy alias for fee_receiver — prefer fee_receiver in new manifests.",
             "enum": [
               "treasury",
               "revenue",
               "expense",
               "operator",
               "deployer",
+              "fee_receiver",
               "fee_recipient",
               "payment_receiver",
               "token_contract",
@@ -114,6 +124,11 @@
             "type": "string",
             "format": "uri",
             "description": "URL pointing to verification evidence (repo, tx, post, etc.)."
+          },
+          "label": {
+            "type": "string",
+            "description": "Short human-readable label for this wallet.",
+            "maxLength": 100
           },
           "notes": {
             "type": "string",

@@ -1,6 +1,6 @@
 # Agent Wallet Manifest — Bankr
 
-Bankr is a crypto-native social payment and agent platform. Adding a manifest gives Bankr-connected agents verified financial identity on the open registry.
+Bankr is a crypto-native social payment and agent platform. Adding a manifest gives Bankr-connected agents verified financial identity on any registry that consumes the standard.
 
 ---
 
@@ -28,14 +28,14 @@ Bankr agents send and receive payments onchain. The manifest makes those payment
       "chain": "base",
       "role": "payment_receiver",
       "label": "Payment Wallet",
-      "verification_method": "github_repo"
+      "verification_method": "repo_manifest"
     },
     {
       "address": "0xYourTreasuryAddress",
       "chain": "base",
       "role": "treasury",
       "label": "Treasury",
-      "verification_method": "github_repo"
+      "verification_method": "repo_manifest"
     }
   ]
 }
@@ -59,13 +59,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: danbuildss/agent-wallet-manifest@v1
-        with:
-          registry-api-key: ${{ secrets.ZETTA_API_KEY }}
 ```
 
-**Step 3.** Add `ZETTA_API_KEY` to your repo secrets.
+This validates your manifest and prints your badge markdown. No API key required.
 
-**Step 4.** Push. Badge markdown printed to CI summary — paste it in your README.
+To also submit to the Zetta AI registry:
+
+```yaml
+      - uses: danbuildss/agent-wallet-manifest@v1
+        with:
+          zetta-api-key: ${{ secrets.ZETTA_API_KEY }}
+          registry-submit: 'true'
+```
+
+**Step 3.** Push. Badge markdown is printed to CI summary.
 
 ---
 
@@ -82,5 +89,4 @@ jobs:
 
 ## Verification
 
-Once CI passes:
-`https://www.zettaai.co/registry/[owner]-[repo]`
+Once CI passes, copy the badge markdown from the job summary and paste it into your README.

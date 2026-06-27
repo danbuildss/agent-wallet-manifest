@@ -1,14 +1,16 @@
 # Agent Wallet Manifest
 
-[![Zetta AI](https://www.zettaai.co/api/badge/danbuildss-agent-wallet-manifest.svg)](https://www.zettaai.co/registry/luca)
-
 The open standard for autonomous agent financial identity.
+
+Any agent, framework, wallet provider, registry, or analytics product can adopt, implement, or build on this standard.
 
 ---
 
 ## The problem
 
-Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent. Anyone can claim a wallet address. Projects can't prove which addresses are theirs. Financial activity is unreadable, unauditable, and untrustworthy. The Agent Wallet Manifest fixes that: a single `.agent/wallets.json` file in your repo becomes a signed, verifiable declaration of your agent's financial identity — publicly indexed on [Zetta AI](https://www.zettaai.co) and interpreted by [Luca](https://www.zettaai.co/luca).
+Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent. Anyone can claim a wallet address. Projects can't prove which addresses are theirs. Financial activity is unreadable, unauditable, and untrustworthy.
+
+The Agent Wallet Manifest fixes that: a single `.agent/wallets.json` file in your repo is a verifiable declaration of your agent's financial identity — readable by any registry, indexer, or intelligence product that consumes it.
 
 ---
 
@@ -20,9 +22,10 @@ Create `.agent/wallets.json` in your repo:
 
 ```json
 {
+  "$schema": "https://schema.zettaai.co/wallets.v1.json",
   "agent": "MyAgent",
   "project": "My Project",
-  "ecosystem": "Base",
+  "ecosystem": "base",
   "website": "https://myproject.xyz",
   "wallets": [
     {
@@ -31,7 +34,7 @@ Create `.agent/wallets.json` in your repo:
       "role": "payment_receiver",
       "verification_method": "repo_manifest",
       "notes": "Primary wallet for API revenue.",
-      "last_updated": "2026-06-16",
+      "last_updated": "2026-06-27",
       "active": true
     }
   ]
@@ -59,21 +62,23 @@ jobs:
 ```
 
 On every push the action will:
-- ✓ Validate your manifest against the schema
-- ✓ Submit it to the Zetta registry
-- ✓ Print your badge markdown in the job summary — ready to copy
+- Validate your manifest against the schema
+- Print your badge markdown in the job summary — ready to copy
+
+To also submit to the Zetta AI registry, add your API key:
+
+```yaml
+      - uses: danbuildss/agent-wallet-manifest@v1
+        with:
+          zetta-api-key: ${{ secrets.ZETTA_API_KEY }}
+          registry-submit: 'true'
+```
 
 **3. Copy your badge from the action output**
 
-After the action runs, the step summary shows:
-
-```markdown
-[![Zetta AI](https://www.zettaai.co/api/badge/YOUR-AGENT-SLUG.svg)](https://www.zettaai.co/registry/YOUR-AGENT-SLUG)
-```
+After the action runs, the step summary shows your badge markdown — copy and paste it into your README.
 
 The badge updates live as your verification status changes. See [`BADGE.md`](BADGE.md) for all variants and status levels.
-
-That's it. Your agent has a public financial identity profile at `https://www.zettaai.co/registry/[slug]`.
 
 ---
 
@@ -92,45 +97,44 @@ The action detects both automatically.
 
 ## Wallet roles
 
-| Role | Description |
-|------|-------------|
-| `treasury` | Holds protocol reserves and long-term funds |
-| `revenue` | Receives income from services or API usage |
-| `expense` | Sends payments to providers or services |
-| `operator` | Hot wallet for agent-initiated on-chain operations |
-| `deployer` | Used to deploy contracts |
-| `fee_recipient` | Receives protocol or platform fees |
-| `payment_receiver` | Receives payments from users or integrations |
-| `token_contract` | Address of an associated token contract |
-| `token_bound_account` | ERC-6551 token-bound account |
-| `unknown` | Role not yet classified |
+| Role | Description | Books-eligible |
+|------|-------------|----------------|
+| `treasury` | Holds protocol reserves and long-term funds | Yes |
+| `revenue` | Receives income from services or API usage | Yes |
+| `expense` | Sends payments to providers or services | Yes |
+| `payment_receiver` | Receives payments from users or integrations | Yes |
+| `fee_receiver` | Receives protocol or platform fees | Yes |
+| `multisig` | Governance treasury | Yes |
+| `operator` | Hot wallet for agent-initiated on-chain operations | No |
+| `deployer` | Used to deploy contracts | No |
+| `token_contract` | Address of an associated token contract | No |
+| `token_bound_account` | ERC-6551 token-bound account | No |
+| `unknown` | Role not yet classified | No |
 
-> **Note:** Token contracts are never books-eligible. Only `treasury`, `revenue`, `expense`, `operator`, `deployer`, `fee_recipient`, and `payment_receiver` wallets produce financial records in Zetta.
+> `fee_recipient` is a legacy alias for `fee_receiver` — both are valid, prefer `fee_receiver` in new manifests.
 
 ---
 
-## How it connects
+## How it works
 
 ```
-your repo
-  └── .agent/wallets.json
+Agent repo
+  └── .agent/wallets.json     ← Layer 1: open declaration (this standard)
         │
         ▼
-  Zetta registry              — indexes and classifies wallet activity
+  Registry / Indexer          ← Layer 2: any implementation
+  (Zetta AI, Safe, Bankr,
+   your own, or anyone's)
         │
         ▼
-  Luca verdict                — "Healthy treasury. Consistent settlement activity."
-        │
-        ▼
-  live badge in your README   — updates automatically as status changes
-  Luca Skills API             — callable financial intelligence for other agents
+  Intelligence / Analytics    ← Layer 3: any product built on top
+  (Luca, dashboards, alerts,
+   audit tools, treasury apps)
 ```
 
-**Zetta AI** is the financial visibility layer. It reads your manifest, monitors on-chain activity, and classifies transactions (settlements, revenue, inference spend, internal transfers).
+The manifest is the declaration layer — neutral, open, and implementation-agnostic. Any registry can index it. Any tool can read it. Any product can build on it.
 
-**Luca** is the AI that sits on top. It reads Zetta data and generates human-readable financial verdicts: treasury health, settlement quality, runway signals — and exposes them as callable skills at `https://www.zettaai.co/api/luca/skills`.
-
-Every `.agent/wallets.json` file in any public repo is automatically picked up and indexed. Every manifest becomes a registry profile. Every profile becomes a verification opportunity.
+[Zetta AI](https://www.zettaai.co) is one registry implementation. [Luca](https://www.zettaai.co/luca) is one intelligence product. Neither is required to use the standard.
 
 ---
 
@@ -150,7 +154,7 @@ Verification methods: `repo_manifest`, `on_chain_signature`, `dns_record`, `soci
 
 ## Validate
 
-Online validator (recommended): [zettaai.co/validate](https://www.zettaai.co/validate)
+Online validator: [zettaai.co/validate](https://www.zettaai.co/validate)
 
 Locally:
 ```bash
@@ -170,6 +174,18 @@ See [`/examples`](examples/) for real manifests:
 
 ---
 
+## Framework docs
+
+Step-by-step adoption guides:
+
+- [AgentKit](docs/agentkit.md)
+- [AEON](docs/aeon.md)
+- [GOAT](docs/goat.md)
+- [Virtuals](docs/virtuals.md)
+- [Bankr](docs/bankr.md)
+
+---
+
 ## Badge
 
 See [`BADGE.md`](BADGE.md) for the dynamic badge, static fallback, all status levels, and how the action prints your badge markdown automatically.
@@ -182,8 +198,11 @@ This is an open standard. PRs welcome for:
 - New wallet roles
 - Additional chains
 - Verification methods
+- Framework documentation
 - Tooling improvements
+
+For schema changes, see [GOVERNANCE.md](GOVERNANCE.md).
 
 ---
 
-*Built by [Zetta AI](https://www.zettaai.co) — the financial operating system for autonomous entities.*
+*Maintained by [Zetta AI](https://www.zettaai.co). Open standard — anyone can adopt, implement, or build on it.*

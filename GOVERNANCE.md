@@ -2,7 +2,9 @@
 
 The Agent Wallet Manifest is an open standard.
 
-Zetta AI maintains this repository and consumes the standard — but does not own agent financial identity. The standard belongs to the ecosystem of agents, developers, and frameworks that adopt it.
+Zetta AI maintains this repository and consumes the standard — but does not own agent financial identity. The standard belongs to the ecosystem of agents, developers, frameworks, registries, and tools that adopt it.
+
+**Anyone can build on this standard.** Registries, indexers, explorers, analytics products, wallet providers, treasury tools, security products, audit systems — any implementation that reads `.agent/wallets.json` and respects the schema is a valid consumer of the standard. No permission required.
 
 ---
 
@@ -28,7 +30,7 @@ The manifest follows semantic versioning at the schema level.
 
 | Version | Status | Schema URL |
 |---------|--------|------------|
-| v1 | ✅ Active | `https://schema.zettaai.co/wallets.v1.json` |
+| v1 | Active | `https://schema.zettaai.co/wallets.v1.json` |
 
 **Rules:**
 - `v1` is long-term supported. Adopters on `v1` will never be broken.

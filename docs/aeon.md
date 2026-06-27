@@ -1,6 +1,6 @@
 # Agent Wallet Manifest — AEON
 
-AEON is an autonomous execution and settlement layer. Adding a manifest gives AEON-powered agents verified financial identity on the open registry.
+AEON is an autonomous execution and settlement layer. Adding a manifest gives AEON-powered agents verified financial identity on any registry that consumes the standard.
 
 ---
 
@@ -28,20 +28,20 @@ AEON agents execute and settle onchain. The manifest connects those settlement w
       "chain": "base",
       "role": "treasury",
       "label": "Treasury",
-      "verification_method": "github_repo"
+      "verification_method": "repo_manifest"
     },
     {
       "address": "0xYourDeployerAddress",
       "chain": "base",
       "role": "deployer",
       "label": "Deployer",
-      "verification_method": "github_repo"
+      "verification_method": "repo_manifest"
     }
   ]
 }
 ```
 
-**Note:** Do not include your token contract address. Token contracts are not attributed to financial books.
+> Do not include your token contract address. Token contracts are not attributed to financial books.
 
 **Step 2.** Add the GitHub Action.
 
@@ -61,13 +61,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: danbuildss/agent-wallet-manifest@v1
-        with:
-          registry-api-key: ${{ secrets.ZETTA_API_KEY }}
 ```
 
-**Step 3.** Add `ZETTA_API_KEY` to your repo secrets.
+This validates your manifest and prints your badge markdown. No API key required.
 
-**Step 4.** Push. CI validates and submits to registry.
+To also submit to the Zetta AI registry:
+
+```yaml
+      - uses: danbuildss/agent-wallet-manifest@v1
+        with:
+          zetta-api-key: ${{ secrets.ZETTA_API_KEY }}
+          registry-submit: 'true'
+```
+
+**Step 3.** Push. CI validates and prints your badge markdown.
 
 ---
 
@@ -84,5 +91,4 @@ jobs:
 
 ## Verification
 
-Once CI passes:
-`https://www.zettaai.co/registry/[owner]-[repo]`
+Once CI passes, copy the badge markdown from the job summary and paste it into your README.

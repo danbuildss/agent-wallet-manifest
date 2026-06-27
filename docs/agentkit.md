@@ -1,6 +1,6 @@
 # Agent Wallet Manifest — AgentKit
 
-Coinbase AgentKit makes it easy to deploy onchain AI agents. Adding a manifest gives your AgentKit agent a verified financial identity — making it readable, trustworthy, and auditable.
+Coinbase AgentKit makes it easy to deploy onchain AI agents. Adding a manifest gives your AgentKit agent a verified financial identity — making it readable, trustworthy, and auditable by any registry or tool that consumes the standard.
 
 ---
 
@@ -33,14 +33,14 @@ This is the difference between an anonymous address and a verified agent identit
       "chain": "base",
       "role": "operator",
       "label": "AgentKit Wallet",
-      "verification_method": "github_repo"
+      "verification_method": "repo_manifest"
     },
     {
       "address": "0xYourTreasuryAddress",
       "chain": "base",
       "role": "treasury",
       "label": "Treasury",
-      "verification_method": "github_repo"
+      "verification_method": "repo_manifest"
     }
   ]
 }
@@ -64,13 +64,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: danbuildss/agent-wallet-manifest@v1
-        with:
-          registry-api-key: ${{ secrets.ZETTA_API_KEY }}
 ```
 
-**Step 3.** Add `ZETTA_API_KEY` to your repo secrets. Get a key at [zettaai.co](https://www.zettaai.co).
+This validates your manifest and prints your badge markdown. No API key required.
 
-**Step 4.** Push. CI runs, validates, submits to registry, and prints your badge markdown.
+To also submit to the Zetta AI registry:
+
+```yaml
+      - uses: danbuildss/agent-wallet-manifest@v1
+        with:
+          zetta-api-key: ${{ secrets.ZETTA_API_KEY }}
+          registry-submit: 'true'
+```
+
+**Step 3.** Push. CI validates and prints your badge markdown in the job summary.
 
 ---
 
@@ -87,10 +94,6 @@ jobs:
 
 ## Verification
 
-Once CI passes, your agent appears at:
-`https://www.zettaai.co/registry/[owner]-[repo]`
+Once CI passes, copy the badge markdown from the job summary and paste it into your README.
 
-Paste the badge in your README:
-```markdown
-[![Zetta AI](https://www.zettaai.co/api/badge/owner-repo.svg)](https://www.zettaai.co/registry/owner-repo)
-```
+Optionally, your agent profile is available at `https://www.zettaai.co/registry/[owner]-[repo]` if you submitted to the Zetta registry.

@@ -1,5 +1,5 @@
 name: 'Verify Agent Wallets'
-description: 'Validate .agent/wallets.json against the Agent Wallet Manifest schema and submit to the Zetta AI registry.'
+description: 'Validate .agent/wallets.json against the Agent Wallet Manifest schema. Optionally submit to any compatible registry.'
 author: 'Zetta AI'
 
 branding:
@@ -11,10 +11,14 @@ inputs:
     description: 'Path to the wallet manifest file'
     required: false
     default: '.agent/wallets.json'
-  registry-submit:
-    description: 'Submit manifest to the Zetta AI registry after validation'
+  zetta-api-key:
+    description: 'API key for submitting to the Zetta AI registry (optional — validation runs without it)'
     required: false
-    default: 'true'
+    default: ''
+  registry-submit:
+    description: 'Submit manifest to the Zetta AI registry after validation. Requires zetta-api-key.'
+    required: false
+    default: 'false'
 
 runs:
   using: 'composite'
@@ -34,7 +38,6 @@ runs:
       shell: bash
       run: |
         MANIFEST="${{ inputs.manifest-path }}"
-        # Support legacy .x402books/wallets.json path
         if [ ! -f "$MANIFEST" ] && [ -f ".x402books/wallets.json" ]; then
           echo "MANIFEST_PATH=.x402books/wallets.json" >> $GITHUB_ENV
           echo "Note: using legacy path .x402books/wallets.json — consider migrating to .agent/wallets.json"
@@ -47,29 +50,29 @@ runs:
       run: |
         echo "Validating $MANIFEST_PATH..."
         node /tmp/avm/dist/validate.js "$MANIFEST_PATH"
-        echo "✓ Manifest Valid"
+        echo "✓ Manifest valid"
 
     - name: Submit to Zetta registry
-      if: inputs.registry-submit == 'true'
+      if: inputs.registry-submit == 'true' && inputs.zetta-api-key != ''
       shell: bash
       run: |
         REPO="$GITHUB_REPOSITORY"
-        echo "Submitting to Zetta registry..."
+        echo "Submitting to Zetta AI registry..."
         curl -s --max-time 10 \
           -X POST "https://www.zettaai.co/api/registry/submit" \
           -H "Content-Type: application/json" \
+          -H "Authorization: Bearer ${{ inputs.zetta-api-key }}" \
           -d "{\"repo\": \"${REPO}\", \"manifest_path\": \"${MANIFEST_PATH}\"}" \
-          --fail-with-body && echo "✓ Registry Submitted" \
+          --fail-with-body && echo "✓ Submitted to Zetta registry" \
           || echo "Registry submission queued — will index on next sync"
 
     - name: Print badge markdown
-      if: inputs.registry-submit == 'true'
       shell: bash
       run: |
         SLUG=$(echo "$GITHUB_REPOSITORY" | tr '/' '-' | tr '[:upper:]' '[:lower:]')
         BADGE_URL="https://www.zettaai.co/api/badge/${SLUG}.svg"
         REGISTRY_URL="https://www.zettaai.co/registry/${SLUG}"
-        BADGE_MD="[![Zetta AI](${BADGE_URL})](${REGISTRY_URL})"
+        BADGE_MD="[![Agent Wallet Manifest](${BADGE_URL})](${REGISTRY_URL})"
 
         echo ""
         echo "══════════════════════════════════════════════════"
@@ -79,19 +82,15 @@ runs:
         echo ""
         echo "  ${BADGE_MD}"
         echo ""
-        echo "Registry profile: ${REGISTRY_URL}"
         echo "Validate online:  https://www.zettaai.co/validate"
         echo "══════════════════════════════════════════════════"
 
         if [ -n "$GITHUB_STEP_SUMMARY" ]; then
           echo "## ✅ Agent Wallet Manifest Verified" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "Add this badge to your README:" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`markdown" >> $GITHUB_STEP_SUMMARY
           echo "${BADGE_MD}" >> $GITHUB_STEP_SUMMARY
           echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Registry profile:** [${REGISTRY_URL}](${REGISTRY_URL})" >> $GITHUB_STEP_SUMMARY
           echo "**Validate online:** [zettaai.co/validate](https://www.zettaai.co/validate)" >> $GITHUB_STEP_SUMMARY
         fi

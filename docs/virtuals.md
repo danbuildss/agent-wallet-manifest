@@ -1,6 +1,6 @@
 # Agent Wallet Manifest — Virtuals Protocol
 
-Virtuals Protocol lets anyone launch AI agents with onchain economic activity. Adding a manifest gives your Virtuals agent verified financial identity — readable by any system, auditable by anyone.
+Virtuals Protocol lets anyone launch AI agents with onchain economic activity. Adding a manifest gives your Virtuals agent verified financial identity — readable by any registry, auditable by anyone.
 
 ---
 
@@ -28,20 +28,20 @@ Virtuals agents accumulate revenue, hold treasury, and spend onchain. The manife
       "chain": "base",
       "role": "treasury",
       "label": "Agent Treasury",
-      "verification_method": "github_repo"
+      "verification_method": "repo_manifest"
     },
     {
       "address": "0xYourRevenueAddress",
       "chain": "base",
       "role": "revenue",
       "label": "Revenue Wallet",
-      "verification_method": "github_repo"
+      "verification_method": "repo_manifest"
     }
   ]
 }
 ```
 
-**Note:** Do not include your agent token contract. Token contracts are excluded from financial books.
+> Do not include your agent token contract. Token contracts are excluded from financial books.
 
 **Step 2.** Add the GitHub Action.
 
@@ -61,13 +61,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: danbuildss/agent-wallet-manifest@v1
-        with:
-          registry-api-key: ${{ secrets.ZETTA_API_KEY }}
 ```
 
-**Step 3.** Add `ZETTA_API_KEY` to your repo secrets.
+This validates your manifest and prints your badge markdown. No API key required.
 
-**Step 4.** Push. Your agent appears on the Zetta AI registry.
+To also submit to the Zetta AI registry:
+
+```yaml
+      - uses: danbuildss/agent-wallet-manifest@v1
+        with:
+          zetta-api-key: ${{ secrets.ZETTA_API_KEY }}
+          registry-submit: 'true'
+```
+
+**Step 3.** Push. Your manifest is validated and badge markdown is printed.
 
 ---
 
@@ -84,5 +91,4 @@ jobs:
 
 ## Verification
 
-Once CI passes:
-`https://www.zettaai.co/registry/[owner]-[repo]`
+Once CI passes, copy the badge markdown from the job summary and paste it into your README.
