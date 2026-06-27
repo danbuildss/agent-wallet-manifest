@@ -1,29 +1,59 @@
 # Agent Wallet Manifest
 
-The open standard for autonomous agent financial identity.
+The open standard for autonomous agent wallet identity.
 
-Any agent, framework, wallet provider, registry, or analytics product can adopt, implement, or build on this standard.
+One file. Any chain. Any framework. Readable by any registry, tool, or product that consumes it.
 
 ---
 
-## The problem
+## What it is
 
-Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent. Anyone can claim a wallet address. Projects can't prove which addresses are theirs. Financial activity is unreadable, unauditable, and untrustworthy.
+Autonomous agents move real money — paying for inference, receiving API revenue, holding treasury funds — but there is no standard way to declare which wallets belong to which agent.
 
-The Agent Wallet Manifest fixes that: a single `.agent/wallets.json` file in your repo is a verifiable declaration of your agent's financial identity — readable by any registry, indexer, or intelligence product that consumes it.
+The Agent Wallet Manifest is a machine-readable declaration: a single `.agent/wallets.json` file in a public repo that states which wallets belong to an agent, what role each wallet plays, and how ownership is verified.
+
+Anything can consume it. Any registry can index it. Any tool can read it. Any product can build on it.
+
+---
+
+## How it fits in the ecosystem
+
+```
+Builder
+      │
+      ▼
+.agent/wallets.json
+      │
+      ▼
+Any Registry · Any Wallet Provider · Any Framework · Any Analytics Tool
+      │
+      ▼
+Applications
+```
+
+The manifest is the declaration layer — neutral, open, and implementation-agnostic.
+
+Anyone can build on it:
+- **Registries** — index manifests, serve profiles, provide verification
+- **Wallet providers** — auto-generate manifests at wallet creation
+- **Frameworks** — scaffold manifests during project setup
+- **Analytics tools** — consume declared wallets for financial intelligence
+- **Security products** — monitor declared wallets for anomalies
+
+See [`docs/registries.md`](docs/registries.md), [`docs/wallet-providers.md`](docs/wallet-providers.md), and [`docs/frameworks.md`](docs/frameworks.md) for how to build on the standard.
 
 ---
 
 ## Quick start
 
-**1. Add your manifest**
+**Step 1. Add your manifest**
 
-Create `.agent/wallets.json` in your repo:
+Create `.agent/wallets.json` in your repo root:
 
 ```json
 {
   "$schema": "https://schema.zettaai.co/wallets.v1.json",
-  "agent": "MyAgent",
+  "agent": "my-agent",
   "project": "My Project",
   "ecosystem": "base",
   "website": "https://myproject.xyz",
@@ -31,17 +61,16 @@ Create `.agent/wallets.json` in your repo:
     {
       "address": "0xYourWalletAddress",
       "chain": "base",
-      "role": "payment_receiver",
+      "role": "treasury",
       "verification_method": "repo_manifest",
-      "notes": "Primary wallet for API revenue.",
-      "last_updated": "2026-06-27",
+      "label": "Main Treasury",
       "active": true
     }
   ]
 }
 ```
 
-**2. Add the GitHub Action**
+**Step 2. Add the GitHub Action**
 
 Create `.github/workflows/verify-wallets.yml`:
 
@@ -61,11 +90,11 @@ jobs:
       - uses: danbuildss/agent-wallet-manifest@v1
 ```
 
-On every push the action will:
-- Validate your manifest against the schema
-- Print your badge markdown in the job summary — ready to copy
+On every push the action validates your manifest against the schema and prints your badge markdown in the job summary — ready to copy into your README.
 
-To also submit to the Zetta AI registry, add your API key:
+**Step 3. Optionally submit to a registry**
+
+To submit to the [Zetta AI registry](https://www.zettaai.co):
 
 ```yaml
       - uses: danbuildss/agent-wallet-manifest@v1
@@ -74,11 +103,9 @@ To also submit to the Zetta AI registry, add your API key:
           registry-submit: 'true'
 ```
 
-**3. Copy your badge from the action output**
+Other registry implementations can define their own submission steps.
 
-After the action runs, the step summary shows your badge markdown — copy and paste it into your README.
-
-The badge updates live as your verification status changes. See [`BADGE.md`](BADGE.md) for all variants and status levels.
+That's it. Your agent has a declared, verifiable financial identity.
 
 ---
 
@@ -97,44 +124,20 @@ The action detects both automatically.
 
 ## Wallet roles
 
-| Role | Description | Books-eligible |
-|------|-------------|----------------|
-| `treasury` | Holds protocol reserves and long-term funds | Yes |
-| `revenue` | Receives income from services or API usage | Yes |
-| `expense` | Sends payments to providers or services | Yes |
-| `payment_receiver` | Receives payments from users or integrations | Yes |
-| `fee_receiver` | Receives protocol or platform fees | Yes |
-| `multisig` | Governance treasury | Yes |
-| `operator` | Hot wallet for agent-initiated on-chain operations | No |
-| `deployer` | Used to deploy contracts | No |
-| `token_contract` | Address of an associated token contract | No |
-| `token_bound_account` | ERC-6551 token-bound account | No |
-| `unknown` | Role not yet classified | No |
+| Role | Description |
+|------|-------------|
+| `treasury` | Holds protocol reserves and long-term funds |
+| `revenue` | Receives income from services or API usage |
+| `expense` | Sends payments to providers or services |
+| `payment_receiver` | Receives payments from users or integrations |
+| `fee_receiver` | Receives protocol or platform fees |
+| `operator` | Hot wallet for agent-initiated on-chain operations |
+| `deployer` | Used to deploy contracts |
+| `token_contract` | Address of an associated token contract |
+| `token_bound_account` | ERC-6551 token-bound account |
+| `unknown` | Role not yet classified |
 
-> `fee_recipient` is a legacy alias for `fee_receiver` — both are valid, prefer `fee_receiver` in new manifests.
-
----
-
-## How it works
-
-```
-Agent repo
-  └── .agent/wallets.json     ← Layer 1: open declaration (this standard)
-        │
-        ▼
-  Registry / Indexer          ← Layer 2: any implementation
-  (Zetta AI, Safe, Bankr,
-   your own, or anyone's)
-        │
-        ▼
-  Intelligence / Analytics    ← Layer 3: any product built on top
-  (Luca, dashboards, alerts,
-   audit tools, treasury apps)
-```
-
-The manifest is the declaration layer — neutral, open, and implementation-agnostic. Any registry can index it. Any tool can read it. Any product can build on it.
-
-[Zetta AI](https://www.zettaai.co) is one registry implementation. [Luca](https://www.zettaai.co/luca) is one intelligence product. Neither is required to use the standard.
+> `fee_recipient` is a legacy alias for `fee_receiver` — both are valid.
 
 ---
 
@@ -154,7 +157,7 @@ Verification methods: `repo_manifest`, `on_chain_signature`, `dns_record`, `soci
 
 ## Validate
 
-Online validator: [zettaai.co/validate](https://www.zettaai.co/validate)
+Online: [zettaai.co/validate](https://www.zettaai.co/validate)
 
 Locally:
 ```bash
@@ -167,16 +170,17 @@ node dist/validate.js .agent/wallets.json
 
 See [`/examples`](examples/) for real manifests:
 
-- [`luca.wallets.json`](examples/luca.wallets.json) — Luca, Zetta AI
+- [`minimal.wallets.json`](examples/minimal.wallets.json) — minimal valid manifest
 - [`aeon.wallets.json`](examples/aeon.wallets.json) — AEON Protocol
+- [`luca.wallets.json`](examples/luca.wallets.json) — Luca, Zetta AI
 - [`surplus.wallets.json`](examples/surplus.wallets.json) — Surplus
 - [`nipmod.wallets.json`](examples/nipmod.wallets.json) — Nipmod
 
 ---
 
-## Framework docs
+## Framework guides
 
-Step-by-step adoption guides:
+Step-by-step adoption guides for specific frameworks:
 
 - [AgentKit](docs/agentkit.md)
 - [AEON](docs/aeon.md)
@@ -186,22 +190,25 @@ Step-by-step adoption guides:
 
 ---
 
+## Build on the standard
+
+- [Building a registry](docs/registries.md) — index manifests, serve profiles, provide verification
+- [Wallet provider integration](docs/wallet-providers.md) — auto-generate manifests at wallet creation
+- [Framework integration](docs/frameworks.md) — scaffold manifests during project setup
+
+---
+
 ## Badge
 
-See [`BADGE.md`](BADGE.md) for the dynamic badge, static fallback, all status levels, and how the action prints your badge markdown automatically.
+See [`BADGE.md`](BADGE.md) for badge variants and how the action prints your badge markdown automatically.
 
 ---
 
 ## Contributing
 
-This is an open standard. PRs welcome for:
-- New wallet roles
-- Additional chains
-- Verification methods
-- Framework documentation
-- Tooling improvements
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). PRs welcome for framework docs, examples, and tooling.
 
-For schema changes, see [GOVERNANCE.md](GOVERNANCE.md).
+For schema changes, open a GitHub Issue tagged `proposal` and follow the process in [`GOVERNANCE.md`](GOVERNANCE.md).
 
 ---
 
