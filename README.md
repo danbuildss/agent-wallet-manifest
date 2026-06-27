@@ -19,28 +19,22 @@ Anything can consume it. Any registry can index it. Any tool can read it. Any pr
 ## How it fits in the ecosystem
 
 ```
-Builder
-      │
-      ▼
-.agent/wallets.json
-      │
-      ▼
-Any Registry · Any Wallet Provider · Any Framework · Any Analytics Tool
-      │
-      ▼
-Applications
+Wallet Provider / Framework
+          │
+          ▼
+  .agent/wallets.json
+          │
+          ▼
+  Agent Wallet Manifest (Open Standard)
+          │
+          ▼
+Registries · Explorers · Analytics · Security · Treasury Tools
+          │
+          ▼
+     Applications
 ```
 
-The manifest is the declaration layer — neutral, open, and implementation-agnostic.
-
-Anyone can build on it:
-- **Registries** — index manifests, serve profiles, provide verification
-- **Wallet providers** — auto-generate manifests at wallet creation
-- **Frameworks** — scaffold manifests during project setup
-- **Analytics tools** — consume declared wallets for financial intelligence
-- **Security products** — monitor declared wallets for anomalies
-
-See [`docs/registries.md`](docs/registries.md), [`docs/wallet-providers.md`](docs/wallet-providers.md), and [`docs/frameworks.md`](docs/frameworks.md) for how to build on the standard.
+See [docs/architecture.md](docs/architecture.md) for the full layer breakdown.
 
 ---
 
@@ -90,7 +84,7 @@ jobs:
       - uses: danbuildss/agent-wallet-manifest@v1
 ```
 
-On every push the action validates your manifest against the schema and prints your badge markdown in the job summary — ready to copy into your README.
+On every push the action validates your manifest and prints your badge markdown in the job summary — ready to copy.
 
 **Step 3. Optionally submit to a registry**
 
@@ -117,8 +111,6 @@ Already using `.x402books/wallets.json`? No migration needed — both paths are 
 |------|--------|
 | `.agent/wallets.json` | Standard (recommended) |
 | `.x402books/wallets.json` | Legacy (still works) |
-
-The action detects both automatically.
 
 ---
 
@@ -166,6 +158,27 @@ node dist/validate.js .agent/wallets.json
 
 ---
 
+## Ecosystem
+
+The Manifest is designed to be implemented by anyone building in the agent economy.
+
+| Who | What they build |
+|-----|-----------------|
+| **Frameworks** | Scaffold `.agent/wallets.json` during project setup so every agent has financial identity from day one |
+| **Wallet Providers** | Auto-generate manifests at wallet creation so declared identity is never an afterthought |
+| **Registries** | Index manifests, serve public agent profiles, provide verification tiers |
+| **Analytics Platforms** | Attribute on-chain activity to declared agent wallets using role data |
+| **Security Products** | Monitor declared wallets with role-aware alerting |
+| **Financial Intelligence** | Classify treasury vs. revenue vs. expense activity and generate financial reports |
+
+→ [Why adopt?](docs/why-adopt.md) — practical reasons for each group  
+→ [Build a registry](docs/registries.md) — implementation spec  
+→ [Wallet provider integration](docs/wallet-providers.md) — integration patterns  
+→ [Framework integration](docs/frameworks.md) — scaffolding patterns  
+→ [Current partners](PARTNERS.md) — who's already building on it
+
+---
+
 ## Examples
 
 See [`/examples`](examples/) for real manifests:
@@ -180,21 +193,11 @@ See [`/examples`](examples/) for real manifests:
 
 ## Framework guides
 
-Step-by-step adoption guides for specific frameworks:
-
 - [AgentKit](docs/agentkit.md)
 - [AEON](docs/aeon.md)
 - [GOAT](docs/goat.md)
 - [Virtuals](docs/virtuals.md)
 - [Bankr](docs/bankr.md)
-
----
-
-## Build on the standard
-
-- [Building a registry](docs/registries.md) — index manifests, serve profiles, provide verification
-- [Wallet provider integration](docs/wallet-providers.md) — auto-generate manifests at wallet creation
-- [Framework integration](docs/frameworks.md) — scaffold manifests during project setup
 
 ---
 
@@ -206,7 +209,7 @@ See [`BADGE.md`](BADGE.md) for badge variants and how the action prints your bad
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md). PRs welcome for framework docs, examples, and tooling.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). PRs welcome for framework docs, examples, and ecosystem additions.
 
 For schema changes, open a GitHub Issue tagged `proposal` and follow the process in [`GOVERNANCE.md`](GOVERNANCE.md).
 
